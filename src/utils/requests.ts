@@ -452,7 +452,7 @@ export const getChapters = async (mangaId: string) => {
     const response = await fetchJson(
       `/manga/${mangaId}/feed`,
       {
-        translatedLanguage: ["en"],
+        translatedLanguage: ["pt-br"],
         limit: 500,
         offset: (page - 1) * 500,
         order: { chapter: "desc" },
