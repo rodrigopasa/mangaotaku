@@ -103,10 +103,10 @@ export const fetchJson = async <T = any>(
     const searchParams = new URLSearchParams();
     Object.entries(params).forEach(([key, value]: any) => {
       if (Array.isArray(value)) {
-        value.forEach((val) => searchParams.append(${key}[], val));
+        value.forEach((val) => searchParams.append(`${key}[]`, val));
       } else if (typeof value === "object") {
         Object.entries(value).forEach(([k, v]: any) =>
-          searchParams.append(${key}[${k}], v)
+          searchParams.append(`${key}[${k}]`, v)
         );
       } else {
         searchParams.append(key, value);
@@ -117,14 +117,14 @@ export const fetchJson = async <T = any>(
 
   const mergedParams = { ...params };
 
-  const url = new URL(${baseUrl}${endpoint});
+  const url = new URL(`${baseUrl}${endpoint}`);
   const serializedParams = serializeParameters(mergedParams);
   url.search = serializedParams;
 
   try {
     const res = await fetch(url, config);
     if (!res.ok) {
-      throw new Error(HTTP error! Status: ${res.status});
+      throw new Error(`HTTP error! Status: ${res.status}`);
     }
     return await res.json();
   } catch (error) {
@@ -164,13 +164,13 @@ export const fetchCover = async (image: string): Promise<string> => {
     const response = await fetch(image, { cache: "force-cache" });
     if (!response.ok) {
       throw new Error(
-        Failed to fetch image (${response.status}): ${response.statusText}
+        `Failed to fetch image (${response.status}): ${response.statusText}`
       );
     }
 
     const buffer = await response.arrayBuffer();
     const base64Image = Buffer.from(buffer).toString("base64");
-    const imageSrc = data:image/jpeg;base64,${base64Image};
+    const imageSrc = `data:image/jpeg;base64,${base64Image}`;
     return imageSrc;
   } catch (error) {
     console.error("Error fetching image:", error);
@@ -204,10 +204,10 @@ export const getLatestManga = async (): Promise<any[]> => {
         id: k?.id,
         updatedAt: k?.attributes?.updatedAt,
         cover: await fetchCover(
-          https://uploads.mangadex.org/covers/${k?.id}/${
+          `https://uploads.mangadex.org/covers/${k?.id}/${
             k?.relationships?.find((t: any) => t?.type === "cover_art")
               ?.attributes?.fileName
-          }.256.jpg
+          }.256.jpg`
         ),
         title:
           k?.attributes?.title?.en ||
@@ -234,10 +234,10 @@ export const searchManga = async (search: string): Promise<any[]> => {
         id: k?.id,
         updatedAt: k?.attributes?.updatedAt,
         cover: await fetchCover(
-          https://uploads.mangadex.org/covers/${k?.id}/${
+          `https://uploads.mangadex.org/covers/${k?.id}/${
             k?.relationships?.find((t: any) => t?.type === "cover_art")
               ?.attributes?.fileName
-          }.256.jpg
+          }.256.jpg`
         ),
         title:
           k?.attributes?.title?.en ||
@@ -283,10 +283,10 @@ export const Carousel = async (): Promise<any[]> => {
         id: manga.id,
         tags: manga.attributes.tags,
         cover: await fetchCover(
-          https://uploads.mangadex.org/covers/${manga.id}/${
+          `https://uploads.mangadex.org/covers/${manga.id}/${
             manga.relationships.find((t: any) => t.type === "cover_art")
               .attributes.fileName
-          }.256.jpg
+          }.256.jpg`
         ),
         title: manga.attributes.title.en || manga?.attributes?.title?.["ja-ro"],
         contentRating: manga.attributes.contentRating,
@@ -374,10 +374,10 @@ export const getFeaturedManga = async (): Promise<any> => {
           id: manga.id,
           tags: manga.attributes.tags,
           cover: await fetchCover(
-            https://uploads.mangadex.org/covers/${manga.id}/${
+            `https://uploads.mangadex.org/covers/${manga.id}/${
               manga.relationships.find((t: any) => t.type === "cover_art")
                 .attributes.fileName
-            }.256.jpg
+            }.256.jpg`
           ),
           title:
             manga.attributes.title.en || manga?.attributes?.title?.["ja-ro"],
@@ -409,10 +409,10 @@ export const getMangaInfo = async (id: string): Promise<any> => {
       id: manga.id,
       tags: manga.attributes.tags,
       cover: await fetchCover(
-        https://uploads.mangadex.org/covers/${manga.id}/${
+        `https://uploads.mangadex.org/covers/${manga.id}/${
           manga.relationships.find((t: any) => t.type === "cover_art")
             .attributes.fileName
-        }.256.jpg
+        }.256.jpg`
       ),
       title:
         manga.attributes.title.en ||
@@ -430,7 +430,7 @@ export const getMangaInfo = async (id: string): Promise<any> => {
   );
 
   const response = await fetchJson(
-    statistics/manga/${id},
+    `statistics/manga/${id}`,
     {},
     { cache: "force-cache" }
   );
@@ -450,7 +450,7 @@ export const getChapters = async (mangaId: string) => {
 
   while (true) {
     const response = await fetchJson(
-      /manga/${mangaId}/feed,
+      `/manga/${mangaId}/feed`,
       {
         translatedLanguage: ["en"],
         limit: 500,
@@ -505,7 +505,7 @@ export const getChapters = async (mangaId: string) => {
 };
 
 const getScanlation = async (id: string) => {
-  const req = await fetchJson(group/${id}, {}, { cache: "force-cache" });
+  const req = await fetchJson(`group/${id}`, {}, { cache: "force-cache" });
 
   return req?.data?.attributes?.name;
 };
@@ -541,10 +541,10 @@ export const getSuggested = async (tags: any) => {
       id: k?.id,
       updatedAt: k?.attributes?.updatedAt,
       cover: await fetchCover(
-        https://uploads.mangadex.org/covers/${k?.id}/${
+        `https://uploads.mangadex.org/covers/${k?.id}/${
           k?.relationships?.find((t: any) => t?.type === "cover_art")
             ?.attributes?.fileName
-        }.256.jpg
+        }.256.jpg`
       ),
       title: k?.attributes?.title?.en || k?.attributes?.title?.["ja-ro"],
     })) || []
@@ -566,7 +566,7 @@ export const getMangaNameAndTag = async (id: string) => {
 
 export const getChapterImages = async (chapterId: string) => {
   try {
-    const req = await fetchJson(at-home/server/${chapterId});
+    const req = await fetchJson(`at-home/server/${chapterId}`);
     return req;
   } catch (error) {
     console.log(error);
@@ -579,7 +579,7 @@ export const generateChapterImages = async (images: string[], hash: string) => {
     images.map(async (image: string) => {
       try {
         return await fetchCover(
-          https://uploads.mangadex.org/data-saver/${hash}/${image}
+          `https://uploads.mangadex.org/data-saver/${hash}/${image}`
         );
       } catch (error) {
         return null;
