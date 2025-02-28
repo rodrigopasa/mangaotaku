@@ -209,8 +209,10 @@ export const getLatestManga = async (): Promise<any[]> => {
               ?.attributes?.fileName
           }.256.jpg`
         ),
-        title: k?.attributes?.title?.["pt-br"] || k?.attributes?.title?.["ja-ro"] || k?.attributes?.title?.ja,
-
+        title:
+          k?.attributes?.title?.en ||
+          k?.attributes?.title?.["ja-ro"] ||
+          k?.attributes?.title?.ja,
       })) || []
     );
 
